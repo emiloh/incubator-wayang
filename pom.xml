@@ -1111,7 +1111,7 @@
                     </includedLicenses>
                     <failOnBlacklist>true</failOnBlacklist>
                     <excludedGroups>
-                        org.apache.spark.*|org.apache.hadoop.*|org.apache.giraph.*|org.antlr.*|junit.*|org.graphchi.*|org.springframework.*
+                        org.apache.parquet.*|org.apache.avro.*|org.apache.spark.*|org.apache.hadoop.*|org.apache.giraph.*|org.antlr.*|junit.*|org.graphchi.*|org.springframework.*
                     </excludedGroups>
                     <excludeTransitiveDependencies>true</excludeTransitiveDependencies>
                 </configuration>
