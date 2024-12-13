@@ -148,6 +148,31 @@ class PlanBuilder(private[api] val wayangContext: WayangContext, private var job
   def readTable(source: TableSource): DataQuanta[Record] = load(source)
 
   /**
+   * Reads a parquet files and provides them as a dataset of [[Record]]s
+   * @param source from that the [[Record]]s should be read from
+   * @return [[DataQuanta]] of [[Record]]s from parquer file
+   */
+  def readParquet(source: ParquetFileSource): DataQuanta[Record] = load(new ParquetFileSource(source))
+
+  /**
+   * Reads a parquet files and provides them as a dataset of [[Record]]s
+   * @param source URL of parquet file
+   * @param columnNames names of the columns in the parquet file
+   * @return [[DataQuanta]] of [[Record]]s from parquer file
+   */
+  def readParquetFile(source: String, columnNames: Array[String]): DataQuanta[Record] = load(new ParquetFileSource(source, columnNames))
+
+
+  /**
+   * Reads a parquet files and provides them as a dataset of [[Record]]s
+   * @param source URL of parquet file
+   * @param columnNames names of the columns in the parquet file
+   * @param columnTypes Types of each column in the parquet file
+   * @return [[DataQuanta]] of [[Record]]s from parquer file
+   */
+  def readParquetFile(source: String, columnNames: Array[String], columnTypes: Array[ColumnType]): DataQuanta[Record] = load(new ParquetFileSource(source, columnNames))
+
+  /**
     * Loads a [[java.util.Collection]] into Wayang and represents them as [[DataQuanta]].
     *
     * @param collection to be loaded
