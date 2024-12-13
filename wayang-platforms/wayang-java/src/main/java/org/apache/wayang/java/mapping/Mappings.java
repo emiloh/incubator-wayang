@@ -58,7 +58,8 @@ public class Mappings {
             new SampleMapping(),
             new ZipWithIdMapping(),
             new KafkaTopicSourceMapping(),
-            new KafkaTopicSinkMapping()
+            new KafkaTopicSinkMapping(),
+            new ParquetSourceFileMapping()
     );
 
     public static Collection<Mapping> GRAPH_MAPPINGS = Arrays.asList(
