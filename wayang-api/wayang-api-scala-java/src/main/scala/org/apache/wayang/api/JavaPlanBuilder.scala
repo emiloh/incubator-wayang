@@ -88,6 +88,15 @@ class JavaPlanBuilder(wayangCtx: WayangContext, jobName: String) {
     */
   def readTable(source: TableSource) = createSourceBuilder(source)(ClassTag(classOf[Record])).asRecords
 
+  /**
+    * Reads a Parquet files and provides it as dataset of [[Record]]s, one per line
+    *
+    * @param source Path of the parquet file
+    * @return  [[DataQuantaBuilder]] for the file
+    */
+  def readParquet(source: ParquetFileSource) =
+    createSourceBuilder(source)(ClassTag(classOf[Records])).asRecords
+
 
   /**
     * Load [[DataQuanta]] from an arbitrary [[UnarySource]].
