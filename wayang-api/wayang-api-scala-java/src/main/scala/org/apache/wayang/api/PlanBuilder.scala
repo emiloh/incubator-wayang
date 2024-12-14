@@ -29,6 +29,8 @@ import org.apache.wayang.commons.util.profiledb.model.Experiment
 import org.apache.wayang.core.api.WayangContext
 import org.apache.wayang.core.plan.wayangplan._
 import org.apache.wayang.core.util.ReflectionUtils
+import org.apache.wayang.basic.operators.ParquetFileSource
+import org.apache.wayang.basic.types.ColumnType
 
 import scala.collection.JavaConversions
 import scala.collection.mutable.ListBuffer

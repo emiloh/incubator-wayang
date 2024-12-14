@@ -95,7 +95,7 @@ class JavaPlanBuilder(wayangCtx: WayangContext, jobName: String) {
     * @return  [[DataQuantaBuilder]] for the file
     */
   def readParquet(source: ParquetFileSource) =
-    createSourceBuilder(source)(ClassTag(classOf[Records])).asRecords
+    createSourceBuilder(source)(ClassTag(classOf[Record])).asRecords
 
 
   /**
