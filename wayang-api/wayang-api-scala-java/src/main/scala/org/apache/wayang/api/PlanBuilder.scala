@@ -172,7 +172,7 @@ class PlanBuilder(private[api] val wayangContext: WayangContext, private var job
    * @param columnTypes Types of each column in the parquet file
    * @return [[DataQuanta]] of [[Record]]s from parquer file
    */
-  def readParquetFile(source: String, columnNames: Array[String], columnTypes: Array[ColumnType]): DataQuanta[Record] = load(new ParquetFileSource(source, columnNames))
+  def readParquetFile(source: String, columnNames: Array[String], columnTypes: Array[ColumnType]): DataQuanta[Record] = load(new ParquetFileSource(source, columnNames, columnTypes))
 
   /**
     * Loads a [[java.util.Collection]] into Wayang and represents them as [[DataQuanta]].
