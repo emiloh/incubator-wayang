@@ -6,6 +6,7 @@ import org.apache.wayang.basic.data.Record;
 import org.apache.wayang.basic.types.ColumnType;
 import org.apache.wayang.core.api.Configuration;
 import org.apache.wayang.core.api.WayangContext;
+import org.apache.wayang.java.Java;
 import org.apache.wayang.java.operators.JavaParquetFileSource;
 
 import java.io.FileWriter;
@@ -14,8 +15,8 @@ import java.io.IOException;
 public class YelpBench {
     public static void main(String[] args) {
 
-        if (args.length != 2) {
-            System.err.println("Only specify path to data folder");
+        if (args.length == 0) {
+            System.err.println("Specify path to data folder and data file");
             System.exit(1);
         }
 
@@ -23,6 +24,7 @@ public class YelpBench {
         String outputFile = args[2];
 
         System.out.println("Input folder: " + inputFolder);
+        System.out.println("Output file: " + outputFile);
 
         String inputParquet = inputFolder.concat("train_yelp.parquet");
         String inputCsv = inputFolder.concat("train_yelp.csv");
@@ -42,7 +44,8 @@ public class YelpBench {
 
     private static void reportCsv(String filepath, FileWriter writer, int runs) throws IOException {
         // Create wayang context
-        WayangContext context = new WayangContext(new Configuration());
+        WayangContext context = new WayangContext(new Configuration())
+                .withPlugin(Java.basicPlugin());
 
         // Create plan builder
         JavaPlanBuilder planBuilder = new JavaPlanBuilder(context)
@@ -70,7 +73,8 @@ public class YelpBench {
 
     private static void reportParquet(String filepath, FileWriter writer, int runs, boolean projection) throws IOException {
         // Create wayang context
-        WayangContext context = new WayangContext(new Configuration());
+        WayangContext context = new WayangContext(new Configuration())
+                .withPlugin(Java.basicPlugin());
 
         // Create plan builder
         JavaPlanBuilder planBuilder = new JavaPlanBuilder(context)
