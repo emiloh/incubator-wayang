@@ -93,7 +93,7 @@ public class YelpBench {
         for (int i = 0; i < runs; i++) {
             CountDataQuantaBuilder<Record> parquet = planBuilder
                     .readParquet(fileSource)
-                    .filter(l -> l.getInt(0) == 0).withName("Remove non-zero labels")
+                    .filter(l -> l.getLong(0) == 0).withName("Remove non-zero labels")
                     .count();
 
             long startTime = System.currentTimeMillis();
