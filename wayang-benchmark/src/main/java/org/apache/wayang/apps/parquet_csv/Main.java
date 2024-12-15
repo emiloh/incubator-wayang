@@ -1,9 +1,12 @@
 package org.apache.wayang.apps.parquet_csv;
 
 import org.apache.flink.util.CollectionUtil;
+import org.apache.wayang.api.CountDataQuantaBuilder;
 import org.apache.wayang.api.JavaPlanBuilder;
 import org.apache.wayang.basic.operators.ParquetFileSource;
 import org.apache.wayang.basic.types.ColumnType;
+import org.apache.wayang.commons.util.profiledb.model.Experiment;
+import org.apache.wayang.commons.util.profiledb.model.Subject;
 import org.apache.wayang.core.api.Configuration;
 import org.apache.wayang.core.api.WayangContext;
 import org.apache.wayang.java.Java;
@@ -40,14 +43,19 @@ public class Main {
                 .count()
                 .collect();
         */
-        Collection<Long> zero_labels_csv = planBuilder
+        CountDataQuantaBuilder<String> zero_labels_csv = planBuilder
                 .readTextFile(inputFolder.concat("train_yelp.csv"))
                 .filter(row -> row.startsWith("0")).withName("Remove non-zero labels")
-                .count()
-                .collect();
+                .count();
 
-        System.out.println("Number of zero labels: " + zero_labels_csv);
-        //System.out.println("Number of labels: " + zero_labels.size());
+        long startTime = System.currentTimeMillis();
+
+        Collection<Long> csv_res = zero_labels_csv.collect();
+
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Number of zero labels: " + csv_res.size() + ", execution time (ms): " + (endTime - startTime));
+
 
     }
 }
