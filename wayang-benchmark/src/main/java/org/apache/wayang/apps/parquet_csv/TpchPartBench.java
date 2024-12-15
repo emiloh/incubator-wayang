@@ -32,7 +32,7 @@ public class TpchPartBench {
             FileWriter writer = new FileWriter(outputFile);
 
             int[] sfs = new int[]{1, 10, 100};
-            int[] runs = new int[]{20, 20, 10};
+            int[] runs = new int[]{20, 10, 5};
 
             for (int i = 0; i < sfs.length; i++) {
                 String inputParquet = inputFolder.concat(String.format("tpch_part_%s.parquet", sfs[i]));
@@ -93,36 +93,33 @@ public class TpchPartBench {
                 .withJobName(String.format("tpch_part_parquet%s", (projection ? "_projection" :"")))
                 .withUdfJarOf(TpchPartBench.class);
 
-        JavaParquetFileSource fileSource = new JavaParquetFileSource(filepath, new String[]{"P_PARTKEY"});
+        JavaParquetFileSource fileSource = new JavaParquetFileSource(filepath, new String[]{"P_TYPE"});
         if (projection) {
-            fileSource = new JavaParquetFileSource(filepath, new String[]{"P_PARTKEY"}, new ColumnType[]{ColumnType.OPTIONAL_LONG});
+            fileSource = new JavaParquetFileSource(filepath, new String[]{"P_TYPE"}, new ColumnType[]{ColumnType.OPTIONAL_STRING});
         }
 
         long[] times = new long[runs];
 
         // Collect all zero labels and count them
         for (int i = 0; i < runs; i++) {
-            long startTime = 0;
-            long endTime = 0;
-            if(projection) {
-                DistinctDataQuantaBuilder<Record> parquet = planBuilder
-                        .readParquet(fileSource)
-                        .map(r -> r).withName("Get partkeys")
-                        .distinct();
-                startTime = System.currentTimeMillis();
-                parquet.collect().forEach(System.out::println);
-                endTime = System.currentTimeMillis();
+            DistinctDataQuantaBuilder<String> parquet;
 
-            } else {
-                DistinctDataQuantaBuilder<String> parquet = planBuilder
+            if(projection) {
+                parquet = planBuilder
                         .readParquet(fileSource)
                         .map(r -> r.getString(0)).withName("Get partkeys")
                         .distinct();
-                startTime = System.currentTimeMillis();
-                parquet.collect();
-                endTime = System.currentTimeMillis();
+
+            } else {
+                parquet = planBuilder
+                        .readParquet(fileSource)
+                        .map(r -> r.getString(4)).withName("Get partkeys")
+                        .distinct();
             }
 
+            long startTime = System.currentTimeMillis();
+            parquet.collect().forEach(System.out::println);
+            long endTime = System.currentTimeMillis();
             times[i] = endTime - startTime;
         }
 
