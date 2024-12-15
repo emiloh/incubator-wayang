@@ -72,7 +72,7 @@ public class YelpBench {
         }
 
         double mean = Arrays.stream(times).average().getAsDouble();
-        double variance = Arrays.stream(times).mapToDouble(time -> time - mean).average().getAsDouble();
+        double variance = Arrays.stream(times).mapToDouble(time -> Math.pow((time - mean), 2)).average().getAsDouble();
         double stddev = Math.sqrt(variance);
 
         writer.write(String.format("csv - %.6f - %.6f\n", mean, stddev));
@@ -110,7 +110,7 @@ public class YelpBench {
         }
 
         double mean = Arrays.stream(times).average().getAsDouble();
-        double variance = Arrays.stream(times).mapToDouble(time -> time - mean).average().getAsDouble();
+        double variance = Arrays.stream(times).mapToDouble(time -> Math.pow((time - mean), 2)).average().getAsDouble();
         double stddev = Math.sqrt(variance);
 
         writer.write(String.format("parquet %s - %.6f - %.6f\n", (projection ? "projection" : ""), mean, stddev));
