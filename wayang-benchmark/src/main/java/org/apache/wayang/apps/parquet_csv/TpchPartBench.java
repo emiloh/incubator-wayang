@@ -103,7 +103,7 @@ public class TpchPartBench {
         // Collect all zero labels and count them
         for (int i = 0; i < runs; i++) {
             DistinctDataQuantaBuilder<Integer> parquet;
-            DistinctDataQuantaBuilder<Object> parquetObj = null;
+            DistinctDataQuantaBuilder<String> parquetObj = null;
 
             if(projection) {
                 parquet = planBuilder
@@ -113,7 +113,7 @@ public class TpchPartBench {
             } else {
                 parquetObj = planBuilder
                         .readParquet(fileSource)
-                        .map(r -> r.getField(0))
+                        .map(r -> r.getString(0))
                         .distinct();
 
             }
