@@ -95,16 +95,16 @@ public class TpchPartBench {
 
         JavaParquetFileSource fileSource = new JavaParquetFileSource(filepath, new String[]{"P_PARTKEY"});
         if (projection) {
-            fileSource = new JavaParquetFileSource(filepath, new String[]{"P_PARTKEY"}, new ColumnType[]{ColumnType.OPTIONAL_LONG});
+            fileSource = new JavaParquetFileSource(filepath, new String[]{"P_PARTKEY"}, new ColumnType[]{ColumnType.OPTIONAL_INTEGER});
         }
 
         long[] times = new long[runs];
 
         // Collect all zero labels and count them
         for (int i = 0; i < runs; i++) {
-            DistinctDataQuantaBuilder<Long> parquet = planBuilder
+            DistinctDataQuantaBuilder<Integer> parquet = planBuilder
                     .readParquet(fileSource)
-                    .map(l -> l.getLong(0)).withName("Get partkeys")
+                    .map(l -> l.getInt(0)).withName("Get partkeys")
                     .distinct();
 
             long startTime = System.currentTimeMillis();
