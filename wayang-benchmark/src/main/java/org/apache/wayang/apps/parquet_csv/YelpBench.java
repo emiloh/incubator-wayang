@@ -36,6 +36,7 @@ public class YelpBench {
             reportParquet(inputParquet, writer, 5, false);
             reportParquet(inputCsv, writer, 5, true);
 
+            writer.flush();
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
