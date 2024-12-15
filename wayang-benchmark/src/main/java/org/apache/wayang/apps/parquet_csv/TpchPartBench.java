@@ -114,9 +114,9 @@ public class TpchPartBench {
                 endTime = System.currentTimeMillis();
 
             } else {
-                DistinctDataQuantaBuilder<String> parquet = planBuilder
+                DistinctDataQuantaBuilder<Record> parquet = planBuilder
                         .readParquet(fileSource)
-                        .map(r -> r.getString(0)).withName("Get partkeys")
+                        .map(r -> r).withName("Get partkeys")
                         .distinct();
                 startTime = System.currentTimeMillis();
                 parquet.collect();
