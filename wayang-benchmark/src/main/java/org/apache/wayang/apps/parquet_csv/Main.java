@@ -3,6 +3,7 @@ package org.apache.wayang.apps.parquet_csv;
 import org.apache.flink.util.CollectionUtil;
 import org.apache.wayang.api.CountDataQuantaBuilder;
 import org.apache.wayang.api.JavaPlanBuilder;
+import org.apache.wayang.basic.data.Record;
 import org.apache.wayang.basic.operators.ParquetFileSource;
 import org.apache.wayang.basic.types.ColumnType;
 import org.apache.wayang.commons.util.profiledb.model.Experiment;
@@ -37,17 +38,17 @@ public class Main {
                 .withUdfJarOf(Main.class);
 
         // Create wayang plan for parquet with projection
-        /*Collection<Long> zero_labels = planBuilder
-                .readParquet(new JavaParquetFileSource(inputFolder.concat("train_yelp.parquet"), new String[]{"label"}, new ColumnType[]{ColumnType.INTEGER}))
+        CountDataQuantaBuilder<Record> zero_labels = planBuilder
+                .readParquet(new JavaParquetFileSource(inputFolder.concat("train_yelp.parquet"), new String[]{"label"}, new ColumnType[]{ColumnType.OPTIONAL_LONG}))
                 .filter(l -> l.getInt(0) == 0).withName("Remove non-zero labels")
-                .count()
-                .collect();
-        */
+                .count();
+
         CountDataQuantaBuilder<String> zero_labels_csv = planBuilder
                 .readTextFile(inputFolder.concat("train_yelp.csv"))
                 .filter(row -> row.startsWith("0")).withName("Remove non-zero labels")
                 .count();
 
+        System.out.println(zero_labels.toString());
         long startTime = System.currentTimeMillis();
 
         Collection<Long> csv_res = zero_labels_csv.collect();
