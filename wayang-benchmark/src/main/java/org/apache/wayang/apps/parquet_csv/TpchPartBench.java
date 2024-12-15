@@ -105,18 +105,18 @@ public class TpchPartBench {
             long startTime = 0;
             long endTime = 0;
             if(projection) {
-                DistinctDataQuantaBuilder<Integer> parquet = planBuilder
+                DistinctDataQuantaBuilder<Record> parquet = planBuilder
                         .readParquet(fileSource)
-                        .map(r -> r.getInt(0)).withName("Get partkeys")
+                        .map(r -> r).withName("Get partkeys")
                         .distinct();
                 startTime = System.currentTimeMillis();
                 parquet.collect().forEach(System.out::println);
                 endTime = System.currentTimeMillis();
 
             } else {
-                DistinctDataQuantaBuilder<Record> parquet = planBuilder
+                DistinctDataQuantaBuilder<String> parquet = planBuilder
                         .readParquet(fileSource)
-                        .map(r -> r).withName("Get partkeys")
+                        .map(r -> r.getString(0)).withName("Get partkeys")
                         .distinct();
                 startTime = System.currentTimeMillis();
                 parquet.collect();
