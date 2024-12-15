@@ -7,6 +7,7 @@ import org.apache.wayang.basic.types.ColumnType;
 import org.apache.wayang.core.api.Configuration;
 import org.apache.wayang.core.api.WayangContext;
 import org.apache.wayang.java.Java;
+import org.apache.wayang.java.operators.JavaParquetFileSource;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,13 +34,20 @@ public class Main {
                 .withUdfJarOf(Main.class);
 
         // Create wayang plan for parquet with projection
-        Collection<Long> zero_labels = planBuilder
-                .readParquet(new ParquetFileSource(inputFolder.concat("train_yelp.parquet"), new String[]{"label"}, new ColumnType[]{ColumnType.INTEGER}))
-                .filter(l -> l.getInt(0) == 0)
+        /*Collection<Long> zero_labels = planBuilder
+                .readParquet(new JavaParquetFileSource(inputFolder.concat("train_yelp.parquet"), new String[]{"label"}, new ColumnType[]{ColumnType.INTEGER}))
+                .filter(l -> l.getInt(0) == 0).withName("Remove non-zero labels")
+                .count()
+                .collect();
+        */
+        Collection<Long> zero_labels_csv = planBuilder
+                .readTextFile(inputFolder.concat("train_yelp.csv"))
+                .filter(row -> row.startsWith("0")).withName("Remove non-zero labels")
                 .count()
                 .collect();
 
-        System.out.println("Number of labels: " + zero_labels.size());
+        System.out.println("Number of zero labels: " + zero_labels_csv);
+        //System.out.println("Number of labels: " + zero_labels.size());
 
     }
 }
