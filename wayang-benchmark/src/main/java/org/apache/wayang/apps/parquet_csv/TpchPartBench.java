@@ -110,7 +110,7 @@ public class TpchPartBench {
                         .map(r -> r.getInt(0)).withName("Get partkeys")
                         .distinct();
                 startTime = System.currentTimeMillis();
-                parquet.collect();
+                parquet.collect().forEach(System.out::println);
                 endTime = System.currentTimeMillis();
 
             } else {
