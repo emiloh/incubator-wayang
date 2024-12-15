@@ -94,6 +94,7 @@ public class TpchPartBench {
                 .withUdfJarOf(TpchPartBench.class);
 
         JavaParquetFileSource fileSource = new JavaParquetFileSource(filepath, new String[]{"P_TYPE"});
+
         if (projection) {
             fileSource = new JavaParquetFileSource(filepath, new String[]{"P_TYPE"}, new ColumnType[]{ColumnType.OPTIONAL_STRING});
         }
@@ -118,8 +119,9 @@ public class TpchPartBench {
             }
 
             long startTime = System.currentTimeMillis();
-            parquet.collect().forEach(System.out::println);
+            parquet.collect();
             long endTime = System.currentTimeMillis();
+
             times[i] = endTime - startTime;
         }
 
