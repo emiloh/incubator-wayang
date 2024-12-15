@@ -107,12 +107,12 @@ public class TpchPartBench {
             if(projection) {
                 parquet = planBuilder
                         .readParquet(fileSource)
-                        .map(l -> l.getInt(0)).withName("Get partkeys")
+                        .map(r -> r.getInt(0)).withName("Get partkeys")
                         .distinct();
             } else {
                 parquet = planBuilder
                         .readParquet(fileSource)
-                        .map(r -> Integer.parseInt((String) r.getField(0)))
+                        .map(r -> (Integer) r.getField(0))
                         .distinct();
             }
 
