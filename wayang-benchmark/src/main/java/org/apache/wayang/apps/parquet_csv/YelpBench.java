@@ -34,9 +34,9 @@ public class YelpBench {
             FileWriter writer = new FileWriter(outputFile);
             writer.write("--- Yelp training data ---\n");
 
-            reportCsv(inputCsv, writer, 5);
-            reportParquet(inputParquet, writer, 5, false);
-            reportParquet(inputParquet, writer, 5, true);
+            reportCsv(inputCsv, writer, 20);
+            reportParquet(inputParquet, writer, 20, false);
+            reportParquet(inputParquet, writer, 20, true);
 
             writer.flush();
             writer.close();
