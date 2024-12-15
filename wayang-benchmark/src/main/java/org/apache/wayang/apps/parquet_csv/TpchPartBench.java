@@ -112,7 +112,7 @@ public class TpchPartBench {
             } else {
                 parquet = planBuilder
                         .readParquet(fileSource)
-                        .map(r -> (int) r.getField(0))
+                        .map(r -> (Integer) r.getField(0))
                         .distinct();
             }
 
