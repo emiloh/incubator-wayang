@@ -70,9 +70,7 @@ public class JavaParquetFileSource extends ParquetFileSource implements JavaExec
         Configuration config = new Configuration();
         Optional<Schema> schema = this.getSchema();
 
-        if (schema.isPresent()) {
-            config.set(AvroReadSupport.AVRO_REQUESTED_PROJECTION, schema.toString());
-        }
+        schema.ifPresent(sch -> config.set(AvroReadSupport.AVRO_REQUESTED_PROJECTION, sch.toString()));
 
         Stream<GenericRecord> stream = getParquetStream(inputPath, config);
         Stream<Record> streamRecord = convertToWayangRecord(stream);
