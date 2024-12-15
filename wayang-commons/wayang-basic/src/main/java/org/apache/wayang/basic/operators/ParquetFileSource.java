@@ -67,6 +67,24 @@ public class ParquetFileSource extends TableSource {
                 case FLOAT:
                     builder.requiredFloat(columnNames[i]);
                     break;
+                case OPTIONAL_STRING:
+                    builder.optionalString(columnNames[i]);
+                    break;
+                case OPTIONAL_DOUBLE:
+                    builder.optionalDouble(columnNames[i]);
+                    break;
+                case OPTIONAL_BOOLEAN:
+                    builder.optionalBoolean(columnNames[i]);
+                    break;
+                case OPTIONAL_INTEGER:
+                    builder.optionalInt(columnNames[i]);
+                    break;
+                case OPTIONAL_LONG:
+                    builder.optionalLong(columnNames[i]);
+                    break;
+                case OPTIONAL_FLOAT:
+                    builder.optionalFloat(columnNames[i]);
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + columnTypes[i]);
             }

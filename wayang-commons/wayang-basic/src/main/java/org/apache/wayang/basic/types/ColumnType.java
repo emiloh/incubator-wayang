@@ -7,4 +7,11 @@ public enum ColumnType {
     INTEGER,
     LONG,
     FLOAT,
+    OPTIONAL_STRING,
+    OPTIONAL_DOUBLE,
+    OPTIONAL_BOOLEAN,
+    OPTIONAL_INTEGER,
+    OPTIONAL_LONG,
+    OPTIONAL_FLOAT,
+
 }
