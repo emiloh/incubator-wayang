@@ -1,6 +1,5 @@
 package org.apache.wayang.apps.parquet_csv;
 
-import org.apache.wayang.api.CountDataQuantaBuilder;
 import org.apache.wayang.api.DistinctDataQuantaBuilder;
 import org.apache.wayang.api.JavaPlanBuilder;
 import org.apache.wayang.basic.data.Record;
@@ -35,7 +34,7 @@ public class TpchPartBench {
             int[] sfs = new int[]{1, 10, 100};
             int[] runs = new int[]{20, 20, 10};
 
-            for(int i = 0; i < sfs.length; i++) {
+            for (int i = 0; i < sfs.length; i++) {
                 String inputParquet = inputFolder.concat(String.format("tpch_part_%s.parquet", sfs[i]));
                 String inputCsv = inputFolder.concat(String.format("tpch_part_%s.csv", sfs[i]));
                 writer.write(String.format("--- TPCH Part benchmark - SF%s  ---\n", sfs[i]));
@@ -49,6 +48,7 @@ public class TpchPartBench {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
     private static void reportCsv(String filepath, FileWriter writer, int runs, int sf) throws IOException {
         // Create wayang context
@@ -64,7 +64,7 @@ public class TpchPartBench {
 
         // Collect all zero labels and count them
         for (int i = 0; i < runs; i++) {
-            CountDataQuantaBuilder<String> csv = planBuilder
+            DistinctDataQuantaBuilder<String> csv = planBuilder
                     .readTextFile(filepath)
                     .map(row -> row.split(",")[0]).withName("Get partkeys")
                     .distinct();
@@ -121,3 +121,5 @@ public class TpchPartBench {
         writer.write(String.format("parquet %s - %.6f - %.6f\n", (projection ? "projection" : ""), mean, stddev));
     }
 }
+
+
