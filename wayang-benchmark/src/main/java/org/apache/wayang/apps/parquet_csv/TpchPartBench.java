@@ -95,7 +95,7 @@ public class TpchPartBench {
 
         JavaParquetFileSource fileSource = new JavaParquetFileSource(filepath, new String[]{"P_PARTKEY"});
         if (projection) {
-            fileSource = new JavaParquetFileSource(filepath, new String[]{"P_PARTKEY"}, new ColumnType[]{ColumnType.OPTIONAL_INTEGER});
+            fileSource = new JavaParquetFileSource(filepath, new String[]{"P_PARTKEY"}, new ColumnType[]{ColumnType.OPTIONAL_LONG});
         }
 
         long[] times = new long[runs];
