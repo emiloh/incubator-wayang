@@ -34,7 +34,7 @@ public class YelpBench {
 
             reportCsv(inputCsv, writer, 5);
             reportParquet(inputParquet, writer, 5, false);
-            reportParquet(inputCsv, writer, 5, true);
+            reportParquet(inputParquet, writer, 5, true);
 
             writer.flush();
             writer.close();
