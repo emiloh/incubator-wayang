@@ -102,10 +102,19 @@ public class TpchPartBench {
 
         // Collect all zero labels and count them
         for (int i = 0; i < runs; i++) {
-            DistinctDataQuantaBuilder<Integer> parquet = planBuilder
-                    .readParquet(fileSource)
-                    .map(l -> l.getInt(0)).withName("Get partkeys")
-                    .distinct();
+            DistinctDataQuantaBuilder<Integer> parquet;
+
+            if(projection) {
+                parquet = planBuilder
+                        .readParquet(fileSource)
+                        .map(l -> l.getInt(0)).withName("Get partkeys")
+                        .distinct();
+            } else {
+                parquet = planBuilder
+                        .readParquet(fileSource)
+                        .map(r -> (int) r.getField(0))
+                        .distinct();
+            }
 
             long startTime = System.currentTimeMillis();
             parquet.collect();
