@@ -11,6 +11,7 @@ import org.apache.wayang.java.operators.JavaParquetFileSource;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class YelpBench {
     public static void main(String[] args) {
@@ -31,6 +32,7 @@ public class YelpBench {
 
         try {
             FileWriter writer = new FileWriter(outputFile);
+            writer.write("--- Yelp training data ---\n");
 
             reportCsv(inputCsv, writer, 5);
             reportParquet(inputParquet, writer, 5, false);
@@ -53,7 +55,7 @@ public class YelpBench {
                 .withJobName("yelp_csv")
                 .withUdfJarOf(YelpBench.class);
 
-        long cumulativeSum = 0;
+        long[] times = new long[runs];
 
         // Collect all zero labels and count them
         for (int i = 0; i < runs; i++) {
@@ -66,10 +68,14 @@ public class YelpBench {
             csv.collect();
             long endTime = System.currentTimeMillis();
 
-            cumulativeSum += endTime - startTime;
+            times[i] = endTime - startTime;
         }
 
-        writer.write(String.format("csv - %d", cumulativeSum/runs));
+        double mean = Arrays.stream(times).average().getAsDouble();
+        double variance = Arrays.stream(times).mapToDouble(time -> time - mean).average().getAsDouble();
+        double stddev = Math.sqrt(variance);
+
+        writer.write(String.format("csv - %.6f - %.6f\n", mean, stddev));
     }
 
     private static void reportParquet(String filepath, FileWriter writer, int runs, boolean projection) throws IOException {
@@ -82,12 +88,12 @@ public class YelpBench {
                 .withJobName(String.format("yelp_parquet%s", (projection ? "_projection" :"")))
                 .withUdfJarOf(YelpBench.class);
 
-        long cumulativeSum = 0;
-
         JavaParquetFileSource fileSource = new JavaParquetFileSource(filepath, new String[]{"label"});
         if (projection) {
             fileSource = new JavaParquetFileSource(filepath, new String[]{"label"}, new ColumnType[]{ColumnType.OPTIONAL_LONG});
         }
+
+        long[] times = new long[runs];
 
         // Collect all zero labels and count them
         for (int i = 0; i < runs; i++) {
@@ -100,9 +106,13 @@ public class YelpBench {
             parquet.collect();
             long endTime = System.currentTimeMillis();
 
-            cumulativeSum += endTime - startTime;
+            times[i] = endTime - startTime;
         }
 
-        writer.write(String.format("parquet %s - %d", (projection ? "projection" : ""), cumulativeSum/runs));
+        double mean = Arrays.stream(times).average().getAsDouble();
+        double variance = Arrays.stream(times).mapToDouble(time -> time - mean).average().getAsDouble();
+        double stddev = Math.sqrt(variance);
+
+        writer.write(String.format("parquet %s - %.6f - %.6f\n", (projection ? "projection" : ""), mean, stddev));
     }
 }
