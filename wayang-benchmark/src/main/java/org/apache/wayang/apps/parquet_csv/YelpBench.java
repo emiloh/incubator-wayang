@@ -68,7 +68,7 @@ public class YelpBench {
             cumulativeSum += endTime - startTime;
         }
 
-        writer.write(String.format("csv - %ld", cumulativeSum/runs));
+        writer.write(String.format("csv - %d", cumulativeSum/runs));
     }
 
     private static void reportParquet(String filepath, FileWriter writer, int runs, boolean projection) throws IOException {
@@ -102,6 +102,6 @@ public class YelpBench {
             cumulativeSum += endTime - startTime;
         }
 
-        writer.write(String.format("parquet %s - %ld", (projection ? "projection" : ""), cumulativeSum/runs));
+        writer.write(String.format("parquet %s - %d", (projection ? "projection" : ""), cumulativeSum/runs));
     }
 }
