@@ -38,9 +38,9 @@ public class TpchPartBench {
                 String inputParquet = inputFolder.concat(String.format("tpch_part_%s.parquet", sfs[i]));
                 String inputCsv = inputFolder.concat(String.format("tpch_part_%s.csv", sfs[i]));
                 writer.write(String.format("--- TPCH Part benchmark - SF%s  ---\n", sfs[i]));
-                reportCsv(inputCsv, writer, runs[i], sfs[i]);
-                reportParquet(inputParquet, writer, runs[i], sfs[i], false);
-                reportParquet(inputParquet, writer, runs[i], sfs[i], true);
+                reportCsv(inputCsv, writer, runs[i]);
+                reportParquet(inputParquet, writer, runs[i], false);
+                reportParquet(inputParquet, writer, runs[i], true);
             }
 
             writer.flush();
@@ -50,15 +50,15 @@ public class TpchPartBench {
         }
     }
 
-    private static void reportCsv(String filepath, FileWriter writer, int runs, int sf) throws IOException {
+    private static void reportCsv(String filepath, FileWriter writer, int runs) throws IOException {
         // Create wayang context
         WayangContext context = new WayangContext(new Configuration())
                 .withPlugin(Java.basicPlugin());
 
         // Create plan builder
         JavaPlanBuilder planBuilder = new JavaPlanBuilder(context)
-                .withJobName("yelp_csv")
-                .withUdfJarOf(YelpBench.class);
+                .withJobName("tpch_part_csv")
+                .withUdfJarOf(TpchPartBench.class);
 
         long[] times = new long[runs];
 
@@ -83,15 +83,15 @@ public class TpchPartBench {
         writer.write(String.format("csv - %.6f - %.6f\n", mean, stddev));
     }
 
-    private static void reportParquet(String filepath, FileWriter writer, int runs, int sf, boolean projection) throws IOException {
+    private static void reportParquet(String filepath, FileWriter writer, int runs, boolean projection) throws IOException {
         // Create wayang context
         WayangContext context = new WayangContext(new Configuration())
                 .withPlugin(Java.basicPlugin());
 
         // Create plan builder
         JavaPlanBuilder planBuilder = new JavaPlanBuilder(context)
-                .withJobName(String.format("yelp_parquet%s", (projection ? "_projection" :"")))
-                .withUdfJarOf(YelpBench.class);
+                .withJobName(String.format("tpch_part_parquet%s", (projection ? "_projection" :"")))
+                .withUdfJarOf(TpchPartBench.class);
 
         JavaParquetFileSource fileSource = new JavaParquetFileSource(filepath, new String[]{"P_PARTKEY"});
         if (projection) {
@@ -132,6 +132,8 @@ public class TpchPartBench {
 
         writer.write(String.format("parquet %s - %.6f - %.6f\n", (projection ? "projection" : ""), mean, stddev));
     }
+
+
 }
 
 
